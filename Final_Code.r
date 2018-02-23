@@ -1,5 +1,6 @@
-pkg <- c("ModelMetrics","gclus","devtools","reshape2","purrr","tidyr","ggplot2","caTools","corrplot","ROCR")
-install.packages("pkg")
+
+#Load the packages
+
 require("caTools")
 require("ggplot2")
 require("tidyr")
@@ -12,10 +13,14 @@ require("corrplot")
 library("ROCR")
 
 
+#Load the file
+
 popularity <- read.csv("OnlineNewsPopularity.csv")
 set.seed(100)
 
+
 #Each column has correct data type
+
 factorCols <- c("data_channel_is_lifestyle", "data_channel_is_bus", "data_channel_is_socmed", 
                 "data_channel_is_tech","data_channel_is_world", "weekday_is_monday","weekday_is_tuesday",
                 "weekday_is_wednesday","weekday_is_thursday","weekday_is_friday","weekday_is_saturday",
@@ -25,6 +30,7 @@ popularity[,factorCols] <- lapply(popularity[,factorCols], factor)
 
 
 #Split data in 70% train set and 30% test set
+
 popularity$url <- sample.split(popularity$url,0.7)
 train <- subset(popularity, popularity$url == TRUE)
 test <- subset(popularity, popularity$url == FALSE)
@@ -33,6 +39,7 @@ test <- test[,-c(1,2)]
 
 
 #Feature Scaling and Standardization
+
 scaleCol <- c(1,2,6,7,8,10,11,18,19,20,21,22,23,24,25,26,27,28,29,59)
 factorScale <- c(1,2,6,7,8,10,11,18,19,20,21,22,23,24,25,26,27,28,29,59,12,13,14,15,16,17,30,31,32,33,34,35,36,37)
 trainscale <- train
@@ -44,6 +51,7 @@ testscale[,-factorScale] <- apply(test[,-factorScale], MARGIN = 2, FUN = functio
 
 
 #Independent variables and dependent variables
+                                  
 x.train <- trainscale[,-59]
 x.test <- testscale[,-59]
 y.train <- trainscale[,59]
@@ -107,8 +115,8 @@ auc
 
 
 #=========================
-##Experiements
-#Define Gradient Descent Algorithmn
+##Task2: Experiements
+#Define Gradient Descent Algorithmn for linear regression
 # define the gradient function dJ/dtheata: 1/m * (h(x)-y))*x where h(x) = x*theta
 # in matrix form this is as follows:
 
@@ -298,8 +306,10 @@ ggplot() + geom_bar(aes(y = MSE, x = test),
                      data = combine.result.mse, stat="identity")
 
 
-#Logistic Regression
+                                  
 #====================================================================
+##Task3: Logistic Regression
+#Gradient Descent for logistic regression
 
 # Implement Sigmoid function
 sigmoid <- function(z) {
